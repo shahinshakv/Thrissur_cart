@@ -8,7 +8,7 @@ const postRoutes = require('./routes/category');
 
 const app = express();
 
-mongoose.connect("mongodb+srv://shaheen:5iqWEMUo8iv1aR04@cluster0.aghaw.mongodb.net/node-angular")
+mongoose.connect("mongodb+srv://shaheen:"+process.env.MONGO_ATLAS_PW+"@cluster0.aghaw.mongodb.net/thrissur_cart")
         .then(()=>{
           console.log("Connected to database");
         })
