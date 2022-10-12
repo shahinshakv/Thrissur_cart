@@ -2,11 +2,13 @@ const express = require('express');
 
 const postController = require("../controllers/category");
 const router = express.Router();
+const extractFile = require("../middleware/file");
 
 
 
 router.post("", 
-  postController.createCategory);
+extractFile, postController.createCategory);
+ router.delete("/:id", postController.deletePost);
 
 router.get("", postController.getPosts);  
 
@@ -18,7 +20,6 @@ router.get("", postController.getPosts);
 
 // router.get("", postController.getPosts);
 
-// router.delete("/:id",checkAuth, postController.deletePost);
 
 
 module.exports = router;
