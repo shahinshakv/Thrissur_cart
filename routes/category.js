@@ -8,7 +8,8 @@ const extractFile = require("../middleware/file");
 
 router.post("", 
 extractFile, postController.createCategory);
- router.delete("/:id", postController.deletePost);
+
+ router.delete("", postController.deletePost);
 
 router.get("", postController.getPosts);  
 

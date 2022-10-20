@@ -7,8 +7,7 @@ exports.createCategory = (req, res, next) => {
     category_name: req.body.category_name,
     category_image: url + "/images/" + req.file.filename,
     priority: req.body.priority,
-  
-
+    status: req.body.status
   });
 
   category.save().then(createdCategory => {
@@ -64,10 +63,17 @@ exports.getPosts = (req, res, next) => {
   // if(pageSize && currentPage){
   //   PostQuery.skip(pageSize * (currentPage - 1)).limit(pageSize);
   // }
-  PostQuery.find().then(documents => {
-    res.status(200).json({
+
+  PostQuery.find().lean().sort({"priority": 1}).then(documents=> {
+        res.status(200).json({
+      
       message: "Posts fetched successfully!",
-      categories: documents
+      categories: documents.map((i)=> {
+        i['availability'] = (i.status === 1) ? "available" : "out of stock"
+        return i;
+      }),
+
+
    //   maxPosts: count
     });
   }).catch(error => {
@@ -95,10 +101,11 @@ exports.getPosts = (req, res, next) => {
 
 exports.deletePost =  (req, res, next) => {
   console.log("working")
-  Category.deleteOne({ _id: req.params.id}).then(result => {
+  Category.deleteOne({ _id: req.body.id, status: 1}).then(result => {
     if (result.deletedCount > 0) {
       res.status(200).json({message: 'successfully deleted'});
     } else {
+      console.log(result);
       res.status(401).json({message: 'Not authorized'});
     }
   }).catch(error => {
