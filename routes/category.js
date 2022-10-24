@@ -13,9 +13,9 @@ extractFile, postController.createCategory);
 
 router.get("", postController.getPosts);  
 
-// router.put(
-//   "/:id",checkAuth,
-//   extractFile, postController.updatePost);
+router.put(
+  "",
+  extractFile, postController.updatePost);
 
 // router.get("/:id",postController.getPost );
 

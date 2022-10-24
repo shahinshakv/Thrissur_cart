@@ -27,32 +27,34 @@ exports.createCategory = (req, res, next) => {
 };
 
 
-// exports.updatePost = (req, res, next) =>{
-//   let imagePath = req.body.imagePath;
-//   if(req.file){
-//     const url = req.protocol + '://' + req.get("host");
-//     imagePath = url + "/images/" + req.file.filename;
-//   }
-//   const post = new Post({
-//      _id : req.body.id,
-//      title : req.body.title,
-//      content : req.body.content,
-//      imagePath: imagePath,
-//      creator : req.userData.userId
-//   });
-//    Post.updateOne({_id: req.params.id, creator: req.userData.userId}, post).then(result => {
-//     if (result.matchedCount > 0) {
-//       res.status(200).json({message: 'successfully updated'});
-//     } else {
-//       res.status(401).json({message: 'Not authorized'});
-//     }
+exports.updatePost = (req, res, next) =>{
+  let imagePath = req.body.imagePath;
+  if(req.file){
+    const url = req.protocol + '://' + req.get("host");
+    imagePath = url + "/images/" + req.file.filename;
+  }
+  const post = new Category({
+     //_id : req.body.id,
+     category_name : req.body.category_name,
+    // category_image: imagePath,
+    status : req.body.status
+    
+  });
+   Category.updateOne({_id: req.body.id}, post).then(result => {
+    if (result.matchedCount > 0) {
 
-//    }).catch(error => {
-//     res.status(500).json({
-//       message: "Couldn't update the post"
-//     })
-//    });
-// };
+      
+      res.status(200).json({message: 'successfully updated'});
+    } else {
+      res.status(401).json({message: 'Not authorized',});
+    }
+
+   }).catch(error => {
+    res.status(500).json({
+      message: "Couldn't update the post"
+    })
+   });
+};
 
 
 exports.getPosts = (req, res, next) => {
