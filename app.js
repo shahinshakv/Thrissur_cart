@@ -2,7 +2,9 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-const postRoutes = require('./routes/category');
+const CategoryRoutes = require('./routes/category');
+const BrandRoutes = require('./routes/brand');
+const BaseRoutes = require('./routes/base');
 //const userRoutes = require('./routes/user');
 
 
@@ -34,7 +36,9 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use("/api/categories",postRoutes);
+app.use("/api/categories",CategoryRoutes);
+app.use("/api/brands",BrandRoutes);
+app.use("/api/base",BaseRoutes);
 
 module.exports = app;
 

@@ -5,7 +5,7 @@ exports.createCategory = (req, res, next) => {
   const url = req.protocol + '://' + req.get("host");
   const category = new Category({
     category_name: req.body.category_name,
-    category_image: url + "/images/" + req.file.filename,
+    image: url + "/images/" + req.file.filename,
     priority: req.body.priority,
     status: req.body.status
   });
@@ -41,9 +41,8 @@ exports.updatePost = (req, res, next) =>{
     
   });
    Category.updateOne({_id: req.body.id}, post).then(result => {
+    console.log(result)
     if (result.matchedCount > 0) {
-
-      
       res.status(200).json({message: 'successfully updated'});
     } else {
       res.status(401).json({message: 'Not authorized',});
@@ -51,6 +50,7 @@ exports.updatePost = (req, res, next) =>{
 
    }).catch(error => {
     res.status(500).json({
+      
       message: "Couldn't update the post"
     })
    });

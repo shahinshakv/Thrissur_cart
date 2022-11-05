@@ -3,7 +3,7 @@ const AutoIncrement = require('mongoose-sequence')(mongoose);
 const categorySchema = mongoose.Schema({
   _id: Number,
   category_name : {type : String, required : true },
-  category_image: {type : String, required : true },
+  image: {type : String, required : true },
   priority: {type : Number, default : 1},
   status: {type : Number, default : 1},
   created_by: {type : String, default : 'admin'},
