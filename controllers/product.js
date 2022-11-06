@@ -1,48 +1,53 @@
-const Brand = require('../models/brand');
+const Product = require('../models/product');
 
 
-exports.createBrand = (req, res, next) => {
+exports.createProduct = (req, res, next) => {
   const url = req.protocol + '://' + req.get("host");
-  const brand = new Brand({
-    brand_name: req.body.brand_name,
-    image: url + "/images/" + req.file.filename,
+  const product = new Product({
+    product_name: req.body.product_name,
     category_id: req.body.category_id,
+    brand_id: req.body.brand_id,
+    image: url + "/images/" + req.file.filename,
+    packing: req.body.packing,
+    size: req.body.size,
+    quantity: req.body.quantity,
+    description: req.body.description,
     priority: req.body.priority,
     status: req.body.status
   });
 
-  brand.save().then(createdBrand => {
+  product.save().then(createdProduct => {
     res.status(201).json({
       message: "Brand added successfully",
-      brands: {
-         data: createdBrand,
-        id: createdBrand._id
+      products: {
+         data: createdProduct,
+        id: createdProduct._id
       }
     });
   })
   .catch(error => {
     console.log(error)
       res.status(500).json({
-        message: "Creating a brand failed"
+        message: "Creating a product failed"
       });
   });
 };
 
 
-exports.updateBrand = (req, res, next) =>{
+exports.updateProduct = (req, res, next) =>{
   let imagePath = req.body.imagePath;
   if(req.file){
     const url = req.protocol + '://' + req.get("host");
     imagePath = url + "/images/" + req.file.filename;
   }
-  const brand = new Brand({
+  const product = new Product({
     // _id : req.body.id,
-     brand_name : req.body.brand_name,
+     product_name : req.body.product_name,
     // category_image: imagePath,
     status : req.body.status
     
   });
-   Brand.updateOne({_id: req.body.id}, brand).then(result => {
+   Product.updateOne({_id: req.body.id}, product).then(result => {
     if (result.matchedCount > 0) {
 
       
@@ -55,25 +60,25 @@ exports.updateBrand = (req, res, next) =>{
     console.log(error)
     res.status(500).json({
       
-      message: "Couldn't update the brand"
+      message: "Couldn't update the product"
     })
    });
 };
 
 
-exports.getBrands = (req, res, next) => {
+exports.getProducts = (req, res, next) => {
   // const pageSize = +req.query.pagesize;
   // const currentPage = +req.query.page;
-   const BrandQuery = Brand.find();
+   const ProductQuery = Product.find();
   // let fetchedPosts;
   // if(pageSize && currentPage){
   //   PostQuery.skip(pageSize * (currentPage - 1)).limit(pageSize);
   // }
 
-  BrandQuery.find().lean().sort({"priority": 1}).then(documents=> {
+  ProductQuery.find().lean().sort({"priority": 1}).then(documents=> {
         res.status(200).json({
-      message: "Brands fetched successfully!",
-      brands: documents.map((i)=> {
+      message: "Products fetched successfully!",
+      products: documents.map((i)=> {
         i['availability'] = (i.status === 1) ? "available" : "out of stock"
         return i;
       }),
@@ -83,7 +88,7 @@ exports.getBrands = (req, res, next) => {
     });
   }).catch(error => {
     res.status(500).json({
-      message: "Fetching posts failed",
+      message: "Fetching products failed",
       error: error
     });
   });
@@ -104,9 +109,9 @@ exports.getBrands = (req, res, next) => {
 // };
 
 
-exports.deleteBrand =  (req, res, next) => {
+exports.deleteProduct =  (req, res, next) => {
   console.log("working")
-  Brand.deleteOne({ _id: req.body.id, status: 1}).then(result => {
+  Product.deleteOne({ _id: req.body.id, status: 1}).then(result => {
     if (result.deletedCount > 0) {
       res.status(200).json({message: 'successfully deleted'});
     } else {
@@ -115,6 +120,6 @@ exports.deleteBrand =  (req, res, next) => {
     }
   }).catch(error => {
     res.status(500).json({
-      message: "Fetching brands failed"
+      message: "Fetching product failed"
     })});
 };

@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const CategoryRoutes = require('./routes/category');
 const BrandRoutes = require('./routes/brand');
 const BaseRoutes = require('./routes/base');
+const ProductRoutes = require('./routes/product');
 //const userRoutes = require('./routes/user');
 
 
@@ -39,6 +40,7 @@ app.use((req, res, next) => {
 app.use("/api/categories",CategoryRoutes);
 app.use("/api/brands",BrandRoutes);
 app.use("/api/base",BaseRoutes);
+app.use("/api/products",ProductRoutes);
 
 module.exports = app;
 

@@ -1,5 +1,6 @@
 const Brand = require('../models/brand');
 const Category = require('../models/category');
+const Product = require('../models/product');
 
 exports.getBase = (req, res, next) => {
     var json = {};
