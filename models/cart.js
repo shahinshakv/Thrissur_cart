@@ -6,14 +6,23 @@ const CartSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User"
     },
+    username: String,
     products: [
       {
         productId: Number,
         quantity: Number,
-        name: String,
+        productname:String,
+        categoryname: String,
+        brandname: String, 
+        packing: String,
+        image: String,
+        description: String,
         price: Number
       }
     ],
+    subTotal: Number,
+    vat: Number, 
+    grandTotal: Number,
     active: {
       type: Boolean,
       default: true

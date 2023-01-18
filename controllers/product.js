@@ -1,14 +1,28 @@
 const Product = require('../models/product');
+const Category = require('../models/category');
+const Brand = require('../models/brand');
 
 
-exports.createProduct = (req, res, next) => {
+exports.createProduct = (async(req, res, next) => {
   const url = req.protocol + '://' + req.get("host");
+
+   
+  const brand_name = await Brand.findOne({_id: req.body.brand_id}).then(result => {
+    return  result.brand_name;
+});
+ const category_name = await Category.findOne({_id: req.body.category_id}).then(result => {
+    return result.category_name;
+ });
+
   const product = new Product({
     product_name: req.body.product_name,
     category_id: req.body.category_id,
+    category_name: category_name,
     brand_id: req.body.brand_id,
+    brand_name: brand_name,
     image: url + "/images/" + req.file.filename,
     packing: req.body.packing,
+    price: req.body.price,
     size: req.body.size,
     quantity: req.body.quantity,
     description: req.body.description,
@@ -16,9 +30,11 @@ exports.createProduct = (req, res, next) => {
     status: req.body.status
   });
 
+  
+
   product.save().then(createdProduct => {
     res.status(201).json({
-      message: "Brand added successfully",
+      message: "Product added successfully",
       products: {
          data: createdProduct,
         id: createdProduct._id
@@ -31,7 +47,7 @@ exports.createProduct = (req, res, next) => {
         message: "Creating a product failed"
       });
   });
-};
+});
 
 
 exports.updateProduct = (req, res, next) =>{
@@ -43,6 +59,7 @@ exports.updateProduct = (req, res, next) =>{
   const product = new Product({
     // _id : req.body.id,
      product_name : req.body.product_name,
+     price : req.body.price,
     // category_image: imagePath,
     status : req.body.status
     

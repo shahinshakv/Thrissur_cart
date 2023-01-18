@@ -6,6 +6,7 @@ const CategoryRoutes = require('./routes/category');
 const BrandRoutes = require('./routes/brand');
 const BaseRoutes = require('./routes/base');
 const ProductRoutes = require('./routes/product');
+const cartRoutes = require('./routes/cart');
 const userRoutes = require('./routes/user');
 
 
@@ -41,6 +42,7 @@ app.use("/api/categories",CategoryRoutes);
 app.use("/api/brands",BrandRoutes);
 app.use("/api/base",BaseRoutes);
 app.use("/api/products",ProductRoutes);
+app.use("/api/cart", cartRoutes);
 app.use("/api/user", userRoutes);
 
 module.exports = app;
