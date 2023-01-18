@@ -61,8 +61,10 @@ exports.addToCart =  (async (req, res) => {
           }
         } else {
           //product does not exists in cart, add new item
+          if(quantity>0){
           cart.username = username;
           cart.products.push({ productId, quantity, productname, categoryname, brandname, packing, description, price });
+          }
         }
        
           subTotal = cart.products.reduce((total, item) => total + item.price * item.quantity, 0);
@@ -95,3 +97,32 @@ exports.addToCart =  (async (req, res) => {
       res.status(500).send("Something went wrong");
     }
   });
+
+  exports.getCart =  (async (req, res) => {
+      
+    const userId = "63c7b17e9e91774d3840cac0"; //TODO: the logged in user id
+    let cart = await Cart.findOne({ userId });
+
+    if(cart){
+      const ActiveProducts = await (await Product.find()).filter(item => item.status === 0);;
+     // console.log(ActiveProducts);
+
+      
+for (let i = 0; i < cart.products.length; i++) {
+  for(let j = 0; j < ActiveProducts.length; j++){
+  if (cart.products[i].productId === ActiveProducts[j]._id) {
+      cart.products.splice(i);
+      subTotal = cart.products.reduce((total, item) => total + item.price * item.quantity, 0);
+      vat = subTotal * 0.05;
+      grandTotal= subTotal + vat;
+
+    cart.subTotal = subTotal;
+    cart.vat = vat;
+    cart.grandTotal = grandTotal;
+    cart = await cart.save();
+    return res.status(201).send(cart);
+  }
+}
+}
+    }
+   });
