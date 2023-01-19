@@ -71,6 +71,7 @@ exports.createUser = (async (req, res, next) => {
         country_name: countryName,
         city_id: cityId,
         city_name: cityName,
+        mobile: req.body.mobile,
         email: req.body.email,
         password: hash
        });

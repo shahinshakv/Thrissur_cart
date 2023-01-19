@@ -4,9 +4,10 @@ const AutoIncrement = require('mongoose-sequence')(mongoose);
 
 const userSchema = mongoose.Schema({
   _id: Number,
+  name: {type : String, required : true},
+  mobile: {type : Number, required : true, unique: true},
   email : {type : String, required : true, unique: true },
   password: {type : String, required : true },
-  name: {type : String, required : true},
   flat: {type: String, required : true },
   address: {type: String, required : true },
   city_id: {type : Number, ref: "City", required : true },

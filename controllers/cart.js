@@ -11,20 +11,12 @@ exports.addToCart =  (async (req, res) => {
    
     const { productId, quantity, user_id } = req.body;
 
-     const [productname, packing, categoryname, brandname, description, price] = await  Product.findOne({_id: productId }).then(result => {
-              if(result !== null){
-              return  [result.product_name, result.packing, result.category_name, result.brand_name, result.description, result.price];
-              } else{
-                res.status(500).send("Invalid product");
-                return;
-              }
-    });
-
-    
-    if(![productname, packing]){
-      res.status(500).send("Invalid product");
-      return;
+    const product = await Product.findOne({_id: productId }).select("product_name packing category_name brand_name description price");
+    if(product === null){
+        res.status(500).send("Invalid product");
+        return;
     }
+    const {product_name: productname, packing, category_name: categoryname, brand_name: brandname, description, price} = product;
     
     const userId = user_id; //TODO: the logged in user id
     const username = await User.findOne({_id: userId}).then(result => {
