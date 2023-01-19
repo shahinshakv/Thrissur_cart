@@ -9,11 +9,15 @@ const { createUser } = require('./user');
 exports.addToCart =  (async (req, res) => {
 
    
-    const { productId, quantity } = req.body;
+    const { productId, quantity, user_id } = req.body;
 
-     const [productname, packing, categoryname, brandname, description, price] = await Product.findOne({_id: productId }).then(result => {
-    
+     const [productname, packing, categoryname, brandname, description, price] = await  Product.findOne({_id: productId }).then(result => {
+              if(result !== null){
               return  [result.product_name, result.packing, result.category_name, result.brand_name, result.description, result.price];
+              } else{
+                res.status(500).send("Invalid product");
+                return;
+              }
     });
 
     
@@ -22,7 +26,7 @@ exports.addToCart =  (async (req, res) => {
       return;
     }
     
-    const userId = "63c7b17e9e91774d3840cac0"; //TODO: the logged in user id
+    const userId = user_id; //TODO: the logged in user id
     const username = await User.findOne({_id: userId}).then(result => {
             return result.email;
     });  
