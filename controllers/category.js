@@ -1,11 +1,33 @@
 const Category = require('../models/category');
-
+const fs = require('fs');
+const sharp = require('sharp');
 
 exports.createCategory = (req, res, next) => {
   const url = req.protocol + '://' + req.get("host");
+
+
+  const base64String = req.body.image;
+  const regex = /^data:.+\/(.+);base64,(.*)$/;
+  const matches = base64String.match(regex);
+  const ext = matches[1];
+  const fileName = 'category--'+Date.now()+`.${ext}`;
+  const filepath = `images/${fileName}`;
+  const imageBuffer = Buffer.from(matches[2], 'base64');
+  sharp(imageBuffer)
+  .resize(500, 500) // resize to 300x300 pixels
+  .toFile(filepath, (err, info) => {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log('Image resized and saved successfully!');
+    }
+  });
+
+  //fs.writeFileSync(filepath, imageBuffer);
+
   const category = new Category({
     category_name: req.body.category_name,
-    image: url + "/images/" + req.file.filename,
+    image: url + "/images/" + fileName,
     priority: req.body.priority,
     status: req.body.status
   });
@@ -28,15 +50,35 @@ exports.createCategory = (req, res, next) => {
 
 
 exports.updatePost = (req, res, next) =>{
-  let imagePath = req.body.imagePath;
-  if(req.file){
+  let imagePath = req.body.image;
+  if(req.body.image){
+
+    const base64String = req.body.image;
+  const regex = /^data:.+\/(.+);base64,(.*)$/;
+  const matches = base64String.match(regex);
+  const ext = matches[1];
+  const fileName = 'category--'+Date.now()+`.${ext}`;
+  const filepath = `images/${fileName}`;
+  const imageBuffer = Buffer.from(matches[2], 'base64');
+  sharp(imageBuffer)
+  .resize(500, 500) // resize to 300x300 pixels
+  .toFile(filepath, (err, info) => {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log('Image resized and saved successfully!');
+    }
+  });
+
+  //fs.writeFileSync(filepath, imageBuffer);
+
     const url = req.protocol + '://' + req.get("host");
-    imagePath = url + "/images/" + req.file.filename;
+    imagePath = url + "/images/" + fileName;
   }
   const post = new Category({
      //_id : req.body.id,
      category_name : req.body.category_name,
-    // category_image: imagePath,
+    // image: imagePath,
     status : req.body.status
     
   });

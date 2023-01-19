@@ -1,11 +1,35 @@
 const Brand = require('../models/brand');
+const fs = require('fs');
+const sharp = require('sharp');
 
 
 exports.createBrand = (req, res, next) => {
   const url = req.protocol + '://' + req.get("host");
+
+  const base64String = req.body.image;
+  const regex = /^data:.+\/(.+);base64,(.*)$/;
+  const matches = base64String.match(regex);
+  const ext = matches[1];
+  const fileName = 'brand--'+Date.now()+`.${ext}`;
+  const filepath = `images/${fileName}`;
+  const imageBuffer = Buffer.from(matches[2], 'base64');
+  sharp(imageBuffer)
+  .resize(500, 500) // resize to 300x300 pixels
+  .toFile(filepath, (err, info) => {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log('Image resized and saved successfully!');
+    }
+  });
+  // fs.writeFileSync(filepath, imageBuffer);
+ 
+
+
+
   const brand = new Brand({
     brand_name: req.body.brand_name,
-    image: url + "/images/" + req.file.filename,
+    image: url + "/images/" + fileName,
     category_id: req.body.category_id,
     priority: req.body.priority,
     status: req.body.status
@@ -30,15 +54,36 @@ exports.createBrand = (req, res, next) => {
 
 
 exports.updateBrand = (req, res, next) =>{
-  let imagePath = req.body.imagePath;
-  if(req.file){
+  let imagePath = req.body.image;
+
+  if(req.body.image){
+
+    const base64String = req.body.image;
+  const regex = /^data:.+\/(.+);base64,(.*)$/;
+  const matches = base64String.match(regex);
+  const ext = matches[1];
+  const fileName = 'brand--'+Date.now()+`.${ext}`;
+  const filepath = `images/${fileName}`;
+  const imageBuffer = Buffer.from(matches[2], 'base64');
+  sharp(imageBuffer)
+  .resize(500, 500) // resize to 300x300 pixels
+  .toFile(filepath, (err, info) => {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log('Image resized and saved successfully!');
+    }
+  });
+
+  //fs.writeFileSync(filepath, imageBuffer);
+
     const url = req.protocol + '://' + req.get("host");
-    imagePath = url + "/images/" + req.file.filename;
+    imagePath = url + "/images/" + fileName;
   }
   const brand = new Brand({
     // _id : req.body.id,
      brand_name : req.body.brand_name,
-    // category_image: imagePath,
+    // image: imagePath,
     status : req.body.status
     
   });

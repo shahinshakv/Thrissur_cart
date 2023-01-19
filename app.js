@@ -8,6 +8,8 @@ const BaseRoutes = require('./routes/base');
 const ProductRoutes = require('./routes/product');
 const cartRoutes = require('./routes/cart');
 const userRoutes = require('./routes/user');
+const countryRoutes = require('./routes/country');
+const cityRoutes = require('./routes/city');
 
 
 const app = express();
@@ -44,6 +46,8 @@ app.use("/api/base",BaseRoutes);
 app.use("/api/products",ProductRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/user", userRoutes);
+app.use("/api/country", countryRoutes);
+app.use("/api/city", cityRoutes);
 
 module.exports = app;
 

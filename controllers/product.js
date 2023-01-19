@@ -1,12 +1,32 @@
 const Product = require('../models/product');
 const Category = require('../models/category');
 const Brand = require('../models/brand');
-
+const fs = require('fs');
+const sharp = require('sharp');
 
 exports.createProduct = (async(req, res, next) => {
   const url = req.protocol + '://' + req.get("host");
 
-   
+  const base64String = req.body.image;
+  const regex = /^data:.+\/(.+);base64,(.*)$/;
+  const matches = base64String.match(regex);
+  const ext = matches[1];
+  const fileName = 'product--'+Date.now()+`.${ext}`;
+  const filepath = `images/${fileName}`;
+  const imageBuffer = Buffer.from(matches[2], 'base64');
+  sharp(imageBuffer)
+  .resize(500, 500) // resize to 300x300 pixels
+  .toFile(filepath, (err, info) => {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log('Image resized and saved successfully!');
+    }
+  });
+  //fs.writeFileSync(filepath, imageBuffer);
+ 
+
+
   const brand_name = await Brand.findOne({_id: req.body.brand_id}).then(result => {
     return  result.brand_name;
 });
@@ -20,7 +40,7 @@ exports.createProduct = (async(req, res, next) => {
     category_name: category_name,
     brand_id: req.body.brand_id,
     brand_name: brand_name,
-    image: url + "/images/" + req.file.filename,
+    image: url + "/images/" + fileName,
     packing: req.body.packing,
     price: req.body.price,
     size: req.body.size,
@@ -51,16 +71,39 @@ exports.createProduct = (async(req, res, next) => {
 
 
 exports.updateProduct = (req, res, next) =>{
-  let imagePath = req.body.imagePath;
-  if(req.file){
+  let imagePath = req.body.image;
+
+  if(req.body.image){
+
+    const base64String = req.body.image;
+  const regex = /^data:.+\/(.+);base64,(.*)$/;
+  const matches = base64String.match(regex);
+  const ext = matches[1];
+  const fileName = 'product--'+Date.now()+`.${ext}`;
+  const filepath = `images/${fileName}`;
+  const imageBuffer = Buffer.from(matches[2], 'base64');
+
+  sharp(imageBuffer)
+  .resize(500, 500) // resize to 300x300 pixels
+  .toFile(filepath, (err, info) => {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log('Image resized and saved successfully!');
+    }
+  });
+
+  //fs.writeFileSync(filepath, imageBuffer);
+
     const url = req.protocol + '://' + req.get("host");
-    imagePath = url + "/images/" + req.file.filename;
+    imagePath = url + "/images/" + fileName;
   }
+
   const product = new Product({
     // _id : req.body.id,
      product_name : req.body.product_name,
      price : req.body.price,
-    // category_image: imagePath,
+     image: imagePath,
     status : req.body.status
     
   });
