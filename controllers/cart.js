@@ -8,15 +8,26 @@ const { createUser } = require('./user');
 
 exports.addToCart =  (async (req, res) => {
 
-   
-    const { productId, quantity, user_id } = req.body;
+  const products = req.body.products;
 
-    const product = await Product.findOne({_id: productId }).select("product_name packing category_name brand_name description price");
-    if(product === null){
-        res.status(500).send("Invalid product");
-        return;
-    }
-    const {product_name: productname, packing, category_name: categoryname, brand_name: brandname, description, price} = product;
+  const cartProducts = await Promise.all(
+    products.map(async productbody => {
+        const product = await Product.findOne({_id: productbody.id }).select("product_name packing category_name brand_name description price");
+        if(product === null){
+            res.status(500).send("Invalid product");
+            return;
+        }
+        let productId = productbody.id;
+        let quantity = productbody.quantity;
+
+        const {product_name: productname, packing, category_name: categoryname, brand_name: brandname, description, price} = product;
+
+        return { productId, quantity, productname, categoryname, brandname, packing, description, price };
+    })
+);
+    const  user_id  = req.body.userId;
+
+    
     
     const userId = user_id; //TODO: the logged in user id
     const username = await User.findOne({_id: userId}).then(result => {
@@ -29,65 +40,21 @@ exports.addToCart =  (async (req, res) => {
     }
   
     try {
-      let cart = await Cart.findOne({ userId });
-      console.log(productname)
-      let subTotal =0.0;
-      let vat = 0.0;
-      let grandTotal = 0.0;
-      if (cart) {
-        //cart exists for user
-
-        let itemIndex = cart.products.findIndex(p => p.productId == productId);
-  
-        if (itemIndex > -1) {
-          //product exists in the cart, update the quantity
-          let productItem = cart.products[itemIndex];
-       
-          if(quantity == 0){
-            cart.products.splice(itemIndex);
-        }else{
-          cart.username = username;
-          productItem.brandname = brandname;
-          productItem.categoryname = categoryname;
-          productItem.quantity = quantity;
-          productItem.packing = packing;
-          productItem.description = description;
-          productItem.price = price;
-          cart.products[itemIndex] = productItem;
-          }
-        } else {
-          //product does not exists in cart, add new item
-          if(quantity>0){
-          cart.username = username;
-          cart.products.push({ productId, quantity, productname, categoryname, brandname, packing, description, price });
-          }
-        }
-       
-          subTotal = cart.products.reduce((total, item) => total + item.price * item.quantity, 0);
-          vat = subTotal * 0.05;
-          grandTotal= subTotal + vat;
-    
-        cart.subTotal = subTotal;
-        cart.vat = vat;
-        cart.grandTotal = grandTotal;
-        cart = await cart.save();
-        return res.status(201).send(cart);
-      } else {
         //no cart for user, create new cart
-        subTotal = quantity * price;
-        vat = subTotal * 0.05;
-        grandTotal = subTotal + vat;
+      let  subTotal = cartProducts.reduce((total, item) => total + item.price * item.quantity, 0);
+      let  vat = subTotal * 0.05;
+      let  grandTotal= subTotal + vat;
         const newCart = await Cart.create({
           userId,
           username,
-          products: [{ productId, quantity, productname,categoryname, brandname, packing, description, price }],
+          products: cartProducts,
           subTotal : subTotal,
           vat : vat,
           grandTotal : grandTotal,
         });
   
         return res.status(201).send(newCart);
-      }
+      
     } catch (err) {
       console.log(err);
       res.status(500).send("Something went wrong");

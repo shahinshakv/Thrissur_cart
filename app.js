@@ -10,6 +10,7 @@ const cartRoutes = require('./routes/cart');
 const userRoutes = require('./routes/user');
 const countryRoutes = require('./routes/country');
 const cityRoutes = require('./routes/city');
+const fcmRoutes = require('./routes/fcmtokens');
 
 
 const app = express();
@@ -48,6 +49,7 @@ app.use("/api/cart", cartRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/country", countryRoutes);
 app.use("/api/city", cityRoutes);
+app.use("/api/fcmtoken", fcmRoutes);
 
 module.exports = app;
 

@@ -6,56 +6,25 @@ const User = require('../models/user');
 
 exports.createUser = (async (req, res, next) => {
 
-  let countryId, countryName;
-  let cityId, cityName;
-  try{
-   [countryId, countryName] = await Country.findOne({_id: req.body.countryId }).then(result => {
-    
-    if(result) {
-      if(result.status==1){
-          return [result._id, result.country_name];
-      }
-      else{
-          return;
-      }
-    }
-}); 
-  if(!countryId){
-      res.status(500).send("Country is not available");
-    return;
+  let countryId;
+  let cityId;
+
+
+  const country = await Country.findOne({_id: req.body.countryId }).select("country_name");
+  if(country === null){
+      res.status(500).send("Invalid country");
+      return;
   }
-  }catch(err){
-    res.status(500).json({
+  const {country_name: countryName} = country;
+  countryId = req.body.countryId;
 
-      message: "Invalid parameter passed for countryId" + err
-      
-  });
+  const city = await City.findOne({_id: req.body.cityId }).select("city_name");
+  if(city === null){
+      res.status(500).send("Invalid city");
+      return;
   }
-
-  try{
-   [cityId, cityName] = await City.findOne({_id: req.body.cityId }).then(result => {
-    
-    if(result) {
-      if(result.status==1){
-          return [result._id, result.city_name];
-      }
-      else{
-          return;
-      }
-    }
-}); 
-  if(!cityId){
-      res.status(500).send("City is not available");
-    return;
-  }
-
-}catch(err){
-  res.status(500).json({
-
-    message: "Invalid parameter passed for cityId" + err
-
-});
-}
+  const {city_name: cityName} = city;
+  cityId = req.body.cityId;
 
   bcrypt.hash(req.body.password, 10)
     .then(hash =>{
@@ -67,9 +36,12 @@ exports.createUser = (async (req, res, next) => {
         longitute: req.body.longitute,
         created_by: req.body.name,
         updated_by: req.body.name,
+        fcm_token: req.body.fcm_token,
         country_id: countryId,
         country_name: countryName,
         city_id: cityId,
+        device: req.body.device,
+        device_id: req.body.device_id,
         city_name: cityName,
         mobile: req.body.mobile,
         email: req.body.email,

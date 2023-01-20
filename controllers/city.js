@@ -5,21 +5,15 @@ const Country = require('../models/country');
 
 exports.createCity =(async (req, res, next) => {
 
-   const [countryId, countryName] = await Country.findOne({_id: req.body.countryId }).then(result => {
-    
-      if(result) {
-        if(result.status==1){
-            return [result._id, result.country_name];
-        }
-        else{
-            return;
-        }
-      }
-}); 
-    if(!countryId){
-        res.status(500).send("Country is not available");
+  let countryId;
+  const country = await Country.findOne({_id: req.body.countryId }).select("country_name");
+  if(country === null){
+      res.status(500).send("Invalid country");
       return;
-    }
+  }
+  const {country_name: countryName} = country;
+  countryId = req.body.countryId;
+
     const city = new City({
         city_name: req.body.city_name,
         country_id: countryId,
