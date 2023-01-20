@@ -14,7 +14,7 @@ const userSchema = mongoose.Schema({
   city_name: {type: String, required : true},
   fcm_token: String,
   latitude: {type: String, required : true},
-  longitute: {type: String, required : true},
+  longitude: {type: String, required : true},
   country_id: {type : Number, ref: "Country", required : true },
   country_name: {type: String, required : true},
   device: {type: String, required: true},

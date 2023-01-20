@@ -33,7 +33,7 @@ exports.createUser = (async (req, res, next) => {
         flat: req.body.flat,
         address: req.body.address,
         latitude: req.body.latitude,
-        longitute: req.body.longitute,
+        longitude: req.body.longitude,
         created_by: req.body.name,
         updated_by: req.body.name,
         fcm_token: req.body.fcm_token,

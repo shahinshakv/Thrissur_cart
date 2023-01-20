@@ -1,13 +1,30 @@
 const Cart = require('../models/cart');
 const Product = require('../models/product');
 const User = require('../models/user');
-const { createUser } = require('./user');
-
+const ip = require('ip');
+const nodemailer = require("nodemailer");
 
 
 
 exports.addToCart =  (async (req, res) => {
 
+
+  const transporter = nodemailer.createTransport({
+    host: 'smtp.gmail.com',
+    port: 587,
+    secure: false, // true for 465, false for other ports
+    auth: {
+        user: 'dlstest2020@gmail.com', 
+        pass:  process.env.App_Mail
+    }
+});
+
+const mailOptions = {
+  from: 'dlstest2020@gmail.com',
+  to: 'shahinshasaidu50@gmail.com',
+  subject: 'Order Confirmation',
+  html: '<h1>Your order has been confirmed!</h1><p>Thank you for your purchase.</p>'
+};
   const products = req.body.products;
 
   const cartProducts = await Promise.all(
@@ -28,15 +45,29 @@ exports.addToCart =  (async (req, res) => {
     const  user_id  = req.body.userId;
 
     
-    
+    let username, email, mobile, flat, address, city_name, latitude, longitude, country_name;
+    let device = req.body.device;
+    let device_id = req.body.device_id;
+    let ip_address = ip.address();
+
     const userId = user_id; //TODO: the logged in user id
-    const username = await User.findOne({_id: userId}).then(result => {
-            return result.email;
+    const user = await User.findOne({_id: userId}).then(result => {
+            return result;
     });  
  
-    if(!username){
+    if(!user){
       res.status(500).send("Invalid User");
       return;
+    }else{
+      username = user.name;
+     email = user.email;
+     mobile = user.mobile;
+     flat = user.flat;
+     address = user.address;
+     city_name = user.city_name;
+     latitude = user.latitude;
+     longitude = user.longitude;
+     country_name = user.country_name
     }
   
     try {
@@ -47,13 +78,50 @@ exports.addToCart =  (async (req, res) => {
         const newCart = await Cart.create({
           userId,
           username,
+          email,
+          mobile,
+          flat,
+          address,
+          city_name,
+          latitude,
+          longitude,
+          device,
+          device_id,
+          ip_address,
           products: cartProducts,
           subTotal : subTotal,
           vat : vat,
           grandTotal : grandTotal,
         });
-  
-        return res.status(201).send(newCart);
+        const order_number = newCart.order_number;
+        const response = {order_number, ...newCart._doc}
+        switch (response.status) {
+          case 0:
+            response.status_of_order = "Order is not confirmed";
+            break;
+          case 1:
+            response.status_of_order = "Order is confirmed";
+            break;
+          case 2:
+            response.status_of_order = "Order is picked";
+            break;
+          case 3:
+            response.status_of_order = "Order is delivered";
+            break;
+          default:
+            response.status_of_order = "Order status not found";
+        }
+        transporter.sendMail(mailOptions, (error, info) => {
+          if (error) {
+              console.log(error);
+          } else {
+              console.log('Email sent: ' + info.response);
+          }
+      });
+        return res.status(201).json({
+          message: "Order created successfully",
+          order: response
+          });
       
     } catch (err) {
       console.log(err);
