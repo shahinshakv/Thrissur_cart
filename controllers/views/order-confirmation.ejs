@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>iWater</title>
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+  <meta http-equiv="Content-Language" content="" />
+  <!-- <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css"> -->
+  <style type="text/css">
+    .theme-color {
+      color: #eb2027;
+    }
+
+    .theme-background-color {
+      background-color: #eb2027;
+    }
+
+    .theme-margin {
+      margin: 5%;
+    }
+
+    .theme-padding {
+      padding: 2%;
+    }
+
+    .theme-padding-1 {
+      padding: 1%;
+    }
+
+    .theme-tag {
+      background-color: #EEEEEE;
+    }
+
+    .theme-tag-color {
+      color: #949494;
+    }
+
+    .theme-dark {
+      font-weight: 600;
+      color: #000000;
+    }
+
+    .btn-circle.btn-xl {
+      width: 120px;
+      height: 120px;
+      margin: 10px 16px;
+      padding: 5px 8px;
+      border-radius: 60px;
+      /*border-color: #EB2027; */
+      border-style: none;
+      font-size: 24px;
+      line-height: 1.33;
+      background-color: #FFFFFF;
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    }
+
+    .btn-track {
+      color: #FFFFFF;
+      background-color: #EB2027;
+      /* Green */
+      border: none;
+      color: white;
+      padding-left: 20%;
+      padding-right: 20%;
+      padding-top: 5%;
+      padding-bottom: 5%;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      margin: 4px 2px;
+      cursor: pointer;
+      border-radius: 12px
+    }
+
+    .round-img {
+      border-radius: 50%;
+      /*border-style: outset;*/
+      /*border-color: #EB2027; */
+      background-color: #FFFFFF;
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    }
+
+    .footer-label {
+      font-weight: 600;
+      color: #FFFFFF;
+    }
+
+
+    .rotate90 {
+      -webkit-transform: rotate(90deg);
+      -moz-transform: rotate(90deg);
+      -ms-transform: rotate(90deg);
+      -o-transform: rotate(90deg);
+      transform: rotate(90deg);
+    }
+
+    .container {
+      margin: 0 auto;
+      max-width: 95rem;
+      width: 95%;
+    }
+
+    .row {
+      grid-row: 1 / span 2;
+    }
+
+    .center-text {
+      text-align: center;
+    }
+
+    .full-width {
+      width: 100%;
+    }
+
+    .column-left {
+      width: 50%;
+      left: 0;
+    }
+
+    .column-right {
+      width: 50%;
+      right: 0;
+    }
+
+    .card-img-top {
+      object-fit: cover;
+    }
+
+    .td {
+      margin: auto;
+    }
+
+    .table {
+      width: 100%;
+    }
+
+    .text-right {
+      text-align: right;
+    }
+
+    .img {
+      border-radius: 50%;
+    }
+
+    p {
+      color: #454545;
+      font-size: 14px;
+      font-family: "Times New Roman", Times, serif;
+    }
+
+    h1 {
+      color: #454545;
+      font-size: 24px;
+      font-family: "Times New Roman", Times, serif;
+    }
+
+    h3 {
+      color: #454545;
+      font-size: 18px;
+      font-family: "Times New Roman", Times, serif;
+    }
+  </style>
+</head>
+
+<body>
+  <section class="container theme-margin">
+    <div class="row">
+      <div class="center-text full-width"> <button type="button" class="btn btn-circle btn-xl center-text full-width">
+          <img src="https://iwaterapp.com/public/uploads/brands/1971525748621cb62c4a013020540528__aqua-emarati.png" alt="Aqua Emarti" width="120px"> </button> </div>
+    </div>
+    <div class="row center-text">
+      <h1 class="theme-color center-text full-width">Dear our customer <%= response.username %> ,
+      </h1>
+    </div>
+    <div class="row">
+      <p class="center-text full-width">Thank you for choosing <span class="theme-color">Aqua Emarti</span></p>
+    </div>
+    <div class="row">
+      <p class="center-text full-width">We are happy to server you! your order has been received</p>
+    </div>
+    <div class="row">
+      <table class="table">
+        <tbody>
+          <tr>
+            <td style="width: 50%">
+              <h3 class="theme-color">ORDER ID# <%= response.order_number %> </h3>
+              <p><span>Date: <%= (new Date(response.createdAt)).toLocaleDateString() %></span><br> <span>Method of Payment:
+                  <%= response.payment_mode %> </span><br> <span>Payment Reference: <%= response.payment_reference %> </span> </p>
+              <h3 class="theme-dark">Address:</h3>
+              <div class="row" style="display: inline-flex;"> <img src=""
+                  alt="iWater" height="50px">
+                <p class="theme-tag-color" style="padding-left: 10px;margin-top: 1%;">
+                  <%= response.flat %> <span>, </span><%= response.address %><br> Mobile No: <%= response.mobile %></p>
+              </div>
+            </td>
+            <td style="width: 50%">
+            
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="row theme-tag" style="margin-top: 2em;">
+      <h3 class="theme-color theme-padding-1">Your Order</h3>
+    </div>
+    <div class="row">
+      <table class="table">
+        <tbody>
+          <% response.products.forEach(function(product) { %>
+          <tr>
+            <td class="td"> <img src="<%= product.image %>" alt="<%= product.productname %>"
+                height="100px" class="round-img"> </td>
+            <td class="td">
+              <p class="theme-dark"><span><%= product.productname %></span><br> <span>Size: <%= product.packing %></span><br>
+                <span>Packing: <%= product.packing %></span> </p>
+            </td>
+            <td class="td">
+              <p class="theme-dark"> Quantity: <span><%= product.quantity %></span></p>
+            </td>
+            <td class="td">
+              <h3 class="theme-dark text-right">AED <%= product.quantity * product.price %></h3>
+            </td>
+          </tr>
+          <% }); %>
+          <tr>
+            <td colspan="2"></td>
+            <td class="theme-dark">Total<br></td>
+            <td class="text-right"><span class="theme-dark"><%= response.subTotal %>  AED</span></td>
+          </tr>
+          <tr>
+            <td colspan="2"></td>
+            <td class="theme-dark">Discount<br></td>
+            <td class="text-right"><span class="theme-dark">0 AED</span></td>
+          </tr>
+          <tr>
+            <td colspan="2"></td>
+            <td class="theme-dark">VAT 5%<br></td>
+            <td class="text-right"><span class="theme-dark"><%= response.vat %> AED</span></td>
+          </tr>
+          <tr>
+            <td colspan="2"></td>
+            <td class="theme-dark">Grand Total <br></td>
+            <td class="text-right"><span class="theme-dark"><%= response.grandTotal %> AED</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="row theme-padding theme-background-color" style="margin-top: 5%">
+      <div class="center-text full-width">
+        <h1 class="footer-label">Thanks</h1>
+      </div>
+    </div>
+  </section>
+</body>
+
+</html>

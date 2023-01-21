@@ -42,6 +42,7 @@ exports.createProduct = (async(req, res, next) => {
     brand_name: brand_name,
     image: url + "/images/" + fileName,
     packing: req.body.packing,
+    netsuite_id: req.body.netsuite_id,
     price: req.body.price,
     size: req.body.size,
     quantity: req.body.quantity,

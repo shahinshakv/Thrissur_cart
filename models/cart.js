@@ -27,7 +27,8 @@ const CartSchema = new mongoose.Schema(
         packing: String,
         image: String,
         description: String,
-        price: Number
+        price: Number, 
+        netsuite_id: Number
       }
     ],
     subTotal: Number,

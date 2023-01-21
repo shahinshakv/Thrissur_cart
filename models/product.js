@@ -9,6 +9,7 @@ const productSchema = mongoose.Schema({
   product_name : {type : String, required : true },
   image : {type : String, required : true },
   packing : {type : String, required : true},
+  netsuite_id : {type : String, required : true},
   price : {type : String, required : true},
   size : {type : String, required : true},
   quantity : {type : Number, required : true},

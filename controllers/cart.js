@@ -3,8 +3,10 @@ const Product = require('../models/product');
 const User = require('../models/user');
 const ip = require('ip');
 const nodemailer = require("nodemailer");
-
-
+const fs = require('fs');
+const path = require('path');
+const ejs = require('ejs');
+const netsuite = require('./netsuite');
 
 exports.addToCart =  (async (req, res) => {
 
@@ -19,17 +21,12 @@ exports.addToCart =  (async (req, res) => {
     }
 });
 
-const mailOptions = {
-  from: 'dlstest2020@gmail.com',
-  to: 'shahinshasaidu50@gmail.com',
-  subject: 'Order Confirmation',
-  html: '<h1>Your order has been confirmed!</h1><p>Thank you for your purchase.</p>'
-};
+
   const products = req.body.products;
 
   const cartProducts = await Promise.all(
     products.map(async productbody => {
-        const product = await Product.findOne({_id: productbody.id }).select("product_name packing category_name brand_name description price");
+        const product = await Product.findOne({_id: productbody.id }).select("product_name packing category_name brand_name description price netsuite_id");
         if(product === null){
             res.status(500).send("Invalid product");
             return;
@@ -37,9 +34,9 @@ const mailOptions = {
         let productId = productbody.id;
         let quantity = productbody.quantity;
 
-        const {product_name: productname, packing, category_name: categoryname, brand_name: brandname, description, price} = product;
+        const {product_name: productname, packing, category_name: categoryname, brand_name: brandname, description, price, netsuite_id} = product;
 
-        return { productId, quantity, productname, categoryname, brandname, packing, description, price };
+        return { productId, quantity, productname, categoryname, brandname, packing, description, price, netsuite_id };
     })
 );
     const  user_id  = req.body.userId;
@@ -111,6 +108,21 @@ const mailOptions = {
           default:
             response.status_of_order = "Order status not found";
         }
+
+        netsuite.createSalesOrder({ response });
+
+ejs.renderFile(path.join(__dirname, 'views', 'order-confirmation.ejs'), { response }, (err, html) => {
+  if (err) {
+    console.error(err);
+    return;
+  }
+        const mailOptions = {
+          from: 'Aqua Emarti',
+          to: 'shahinshasaidu50@gmail.com',
+          subject: 'Order Confirmation',
+          html
+        };
+
         transporter.sendMail(mailOptions, (error, info) => {
           if (error) {
               console.log(error);
@@ -118,6 +130,7 @@ const mailOptions = {
               console.log('Email sent: ' + info.response);
           }
       });
+    });
         return res.status(201).json({
           message: "Order created successfully",
           order: response
