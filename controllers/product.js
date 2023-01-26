@@ -108,11 +108,15 @@ exports.updateProduct = (req, res, next) =>{
     status : req.body.status
     
   });
-   Product.updateOne({_id: req.body.id}, product).then(result => {
-    if (result.matchedCount > 0) {
+   Product.findByIdAndUpdate(req.body.id, product, {new: true}).then(result => {
+    if (result) {
 
-      
-      res.status(200).json({message: 'successfully updated'});
+      res.status(200).json({
+        message: "Product updated successfully",
+        products: {
+           data: result
+        }
+      });
     } else {
       res.status(401).json({message: 'Not authorized',});
     }
@@ -120,7 +124,6 @@ exports.updateProduct = (req, res, next) =>{
    }).catch(error => {
     console.log(error)
     res.status(500).json({
-      
       message: "Couldn't update the product"
     })
    });
