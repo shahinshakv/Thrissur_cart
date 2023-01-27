@@ -17,9 +17,7 @@ router.get("", postController.getProducts);
 
 router.put(
   "",
-  extractFile, postController.updateProduct, (req, res, next) => {
-    io.emit("update_product", req.body);
-  });
+  extractFile, postController.updateProduct);
 
 // router.get("/:id",postController.getPost );
 

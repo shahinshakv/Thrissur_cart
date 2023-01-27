@@ -14,16 +14,3 @@ io.on('connection', (socket) => {
         console.log('Client disconnected');
     });
 });
-
-io.on('connection', (socket) => {
-    console.log('New client connected');
-  
-    socket.on('update_product', (data) => {
-        console.log(` product updated: ${data}`);
-        io.emit('update_product', data);
-    });
-  
-    socket.on('disconnect', () => {
-        console.log('Client disconnected');
-    });
-});
