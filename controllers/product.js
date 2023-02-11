@@ -139,7 +139,7 @@ exports.getProducts = (req, res, next) => {
   //   PostQuery.skip(pageSize * (currentPage - 1)).limit(pageSize);
   // }
 
-  ProductQuery.find().lean().sort({"priority": 1}).then(documents=> {
+  ProductQuery.find().lean().sort({"created_date": -1,"priority": 1}).then(documents=> {
         res.status(200).json({
       message: "Products fetched successfully!",
       products: documents.map((i)=> {
