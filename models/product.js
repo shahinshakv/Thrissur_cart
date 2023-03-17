@@ -18,7 +18,7 @@ const productSchema = mongoose.Schema({
   status : {type : Number, default : 1},
   created_by : {type : String, default : 'admin'},
   updated_by : {type : String, default : 'admin'},
-  created_date : {type : Date, default : Date.now},
+  created_date : {type : Date},
   updated_date : {type : Date, default : Date.now}
 });
 productSchema.plugin(AutoIncrement,{start_seq: 100, id: 'product_id', inc_field: '_id'});

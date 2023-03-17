@@ -48,7 +48,8 @@ exports.createProduct = (async(req, res, next) => {
     quantity: req.body.quantity,
     description: req.body.description,
     priority: req.body.priority,
-    status: req.body.status
+    status: req.body.status,
+    created_date: Date.now()
   });
 
   
@@ -105,7 +106,8 @@ exports.updateProduct = (req, res, next) =>{
      product_name : req.body.product_name,
      price : req.body.price,
      image: imagePath,
-    status : req.body.status
+    status : req.body.status,
+    updated_date: Date.now()
     
   });
    Product.findByIdAndUpdate(req.body.id, product, {new: true}).then(result => {
