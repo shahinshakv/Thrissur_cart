@@ -2,7 +2,6 @@ const mongoose = require('mongoose');
 const AutoIncrement = require('mongoose-sequence')(mongoose); 
 const brandSchema = mongoose.Schema({
   _id: Number,
-  category_id: {type : Number, ref: "Category", required : true },
   brand_name : {type : String, required : true },
   image: {type : String, required : true },
   priority: {type : Number, default : 1},

@@ -30,7 +30,6 @@ exports.createBrand = (req, res, next) => {
   const brand = new Brand({
     brand_name: req.body.brand_name,
     image: url + "/images/" + fileName,
-    category_id: req.body.category_id,
     priority: req.body.priority,
     status: req.body.status
   });
