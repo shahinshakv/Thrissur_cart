@@ -5,11 +5,11 @@ const xml2js = require('xml2js');
 exports.createSalesOrder = async ({ response }) => {
   try {
     // Define your NetSuite account information
-    const accountId = '3988781';
-    const consumerKey = '76e38efb6da4b695b29b9509cf53200e5739b579d11c063c0f4f4c2cd2663b32';
-    const consumerSecret = 'daa90d5786180eba479b127fb6a1acaa36d19245fbd4cd742dd623917889d975';
-    const tokenId = '6ed0a7fd566942a0356f9b3ccf42e74d3ee181fb7efbd39732682d87f891ed6c';
-    const tokenSecret = '8daa0b411886080de7b7411fc5b7267d1fb4114429e9526f4b48a05dfaf23057';
+    const accountId = '';
+    const consumerKey = '';
+    const consumerSecret = '';
+    const tokenId = '';
+    const tokenSecret = '';
 
     // Define the sales order data
     console.log(response);
